@@ -189,10 +189,17 @@ public class XActivityManagerService extends XHook {
 
 		case updateSleepIfNeededLocked:
 			if (param.thisObject != null) {
-				Field methodSleeping = param.thisObject.getClass().getDeclaredField("mSleeping");
-				methodSleeping.setAccessible(true);
-				mSleeping = (Boolean) methodSleeping.get(param.thisObject);
-				Util.log(this, Log.WARN, "Sleeping=" + mSleeping);
+				Field methodSleeping = null;
+				try {
+            				methodSleeping = context.getClass().getDeclaredField("mSleeping");
+        			} catch (NoSuchFieldException ignored) {
+        			}
+        			
+        			if (methodSleeping != null) {
+					methodSleeping.setAccessible(true);
+					mSleeping = (Boolean) methodSleeping.get(param.thisObject);
+					Util.log(this, Log.WARN, "Sleeping=" + mSleeping);
+        			}
 			}
 			break;
 		}
